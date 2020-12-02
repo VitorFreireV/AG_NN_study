@@ -39,7 +39,7 @@ def func_obj1(solution, neuralnet, env, params_nn, onehot_encode):
         
         if done:
             if scores_all == 1:
-                print('ganhou, score: ', scores_all)
+                print('ganhou: ', scores_all)
             return scores_all
     if scores_all > 0 :
         #print("ganhou2")
