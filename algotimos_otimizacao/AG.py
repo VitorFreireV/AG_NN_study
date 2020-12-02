@@ -53,7 +53,7 @@ class AG:
         son2 = np.concatenate((dad1[lim1:], dad2[:lim1]))
         return son1, son2
 
-    def solve_old(self, fo = func_obj, dim_pop = 100, dim_s = 6, tx_cross = 1.0, tx_mutation = 0.2, it = 50, cross_over = SimpleCrossOver, mutation = SimpleMutation):
+    def solve_old(self, fo = func_obj, dim_pop = 150, dim_s = 6, tx_cross = 1.0, tx_mutation = 0.2, it = 1000, cross_over = SimpleCrossOver, mutation = SimpleMutation):
         seletor = Selection(fo)
         pop = seletor.RandomPopulation(dim_pop = dim_pop, dim_s = dim_s)        
         mean_pop = []

@@ -60,6 +60,6 @@ def func_obj(solution, neuralnet, env, params_nn, onehot_encode):
 
     for i in range(3):
         rewards += func_obj1(solution, neuralnet, env, params_nn, onehot_encode)
-    if rewards >= 2:
+    #if rewards >= 2:
         #print("bom: ", rewards)
     return rewards
