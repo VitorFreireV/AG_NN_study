@@ -53,77 +53,6 @@ class AG:
         son2 = np.concatenate((dad1[lim1:], dad2[:lim1]))
         return son1, son2
 
-    def solve_old(self, fo = func_obj, dim_pop = 150, dim_s = 6, tx_cross = 1.0, tx_mutation = 0.2, it = 1000, cross_over = SimpleCrossOver, mutation = SimpleMutation):
-        seletor = Selection(fo)
-        pop = seletor.RandomPopulation(dim_pop = dim_pop, dim_s = dim_s)        
-        mean_pop = []
-        # Loop de iteações
-        for k in range(it):
-            print('it:', k)
-            # calcula fo pra todas soluções
-            #print("Caalc FO:")
-            for s in pop:
-                s[0] = self.fo(s[1:])
-            mean_pop.append(sum(pop[:,0])/len(pop[:,0]))
-            select_pop = seletor.Select_Tournament(pop) # populção selecionada
-
-            # lista utilizada para controlar os sorteios de forma mais eficiente
-            controll_list = list(range(select_pop.shape[0])) # lista vazia do tamanho da população selecionada
-            children = []
-
-            # CROSS OVER
-            for i in range(int(len(select_pop)/2)):
-                if np.random.random() < tx_cross:
-                    #print('Aplicando mutação:', i)
-                    # sorteia pai 1
-                    value1 = np.random.randint(0,len(controll_list))
-                    dad1 = select_pop[controll_list[value1]]
-                    controll_list.remove(controll_list[value1])
-
-                    # sorteia pai 2
-                    value1 = np.random.randint(len(controll_list))
-                    dad2 = select_pop[controll_list[value1]]
-                    controll_list.remove(controll_list[value1])
-
-                    # aplica operação de crossover
-                    son1, son2 = cross_over(dad1, dad2, 0.5)
-                    #son1, son2 = self.SimpleCrossOver(dad1, dad2, 0.5)
-                    children.append(son1)
-                    children.append(son2)
-                    #print('Mutação concluida')
-                else:
-                    children.append(select_pop[np.random.randint(len(select_pop))])
-                    children.append(select_pop[np.random.randint(len(select_pop))])
-                    
-
-            # junta os filhos gerados com a populção selecionada
-            pop = np.vstack((select_pop, np.array(children)))
-
-            # mutação   
-            for i in range(len(pop)):
-                if np.random.random() < tx_mutation:
-                    mutation(pop[i])
-
-            # calcula os FO(s), salva melhor solução e melhor fo     
-            for s in pop:
-                s[0] = self.fo(s[1:])
-                if s[0] < self.best_fo:
-                    self.best_fo = s[0]
-                    self.best_s = s[1:]
-            #if k % 50 == 0:
-                #print("**Report**: \nPopulation Number: ", len(pop), "\nIteration number: ", k, "\nBest fo: ", self.best_fo)
-                #print("\n-------------------------------------------------------------\n")
-
-        for s in pop:
-            s[0] = self.fo(s[1:])
-            if s[0] < self.best_fo:
-                self.best_fo = s[0]
-                self.best_s = s[1:]
-        self.min_fo = min(pop[:,0])
-
-        self.mean_fo = sum(pop[:,0])/len(pop[:,0])
-
-        return self.best_fo, self.min_fo, self.mean_fo, mean_pop
 
     # otimização do algoritmo genetico
     def solve(self, fo = func_obj, dim_pop = 100, dim_s = 6, tx_cross = 0.6, tx_mutation = 0.4, it = 100, neuralnet = False, env = False, params_nn = False,  onehot_encode = False):
@@ -196,7 +125,7 @@ class AG:
             
         for s in pop:
             s[0] = self.fo(s[1:], neuralnet, env, params_nn, onehot_encode)
-            if s[0] < self.best_fo:
+            if s[0] > self.best_fo:
                 self.best_fo = s[0]
                 self.best_s = s[1:]
         self.min_fo = min(pop[:,0])
